@@ -1,2 +1,0 @@
-0 Human_Art
-1 AI_Art
