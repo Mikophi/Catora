@@ -23,7 +23,6 @@ router.put('/profile/:user_id', upload.fields([{ name: 'profile_image', maxCount
   const profile_image_url = req.files['profile_image'] ? req.files['profile_image'][0].path : null;
   const background_image_url = req.files['background_image'] ? req.files['background_image'][0].path : null;
 
-  // Validasi input
   if (!user_id || (!artist_name && !description && !profile_image_url && !background_image_url)) {
     return res.status(400).json({ error: 'Missing required fields for update' });
   }

@@ -26,7 +26,7 @@ router.post('/register', (req, res) => {
       const userId = insertResults.insertId;
 
       const insertProfileQuery = 'INSERT INTO catora_user_profiles (user_id, artist_name, description) VALUES (?, ?, ?)';
-      db.query(insertProfileQuery, [userId, 'Lorem Ipsum Artist', 'Lorem ipsum description'], (profileError, profileResults) => {
+      db.query(insertProfileQuery, [userId, 'Catora', 'Catora'], (profileError) => {
         if (profileError) {
           console.error('Error creating user profile:', profileError);
           return res.status(500).json({ error: 'Internal Server Error' });

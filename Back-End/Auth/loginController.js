@@ -13,10 +13,10 @@ router.post('/login', (req, res) => {
     }
 
     if (results.length > 0) {
+      const user_id = results[0].user_id;
 
-      res.status(200).json({ message: 'Login successful' });
+      res.status(200).json({ message: 'Login successful', user_id: user_id });
     } else {
-
       res.status(401).json({ error: 'Invalid username or password' });
     }
   });

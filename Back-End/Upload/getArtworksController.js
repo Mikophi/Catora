@@ -17,12 +17,11 @@ router.get('/artworks', (req, res) => {
       return res.status(500).json({ error: 'Internal Server Error' });
     }
 
-    // Menambahkan URL lengkap untuk gambar dari folder lokal
     const artworksWithResolvedUrls = results.map((artwork) => {
       return {
         ...artwork,
         image_url: artwork.image_url
-          ? resolve('http://localhost:3000', artwork.image_url)
+          ? resolve('http://localhost:3000/images', artwork.image_url)
           : null,
       };
     });
