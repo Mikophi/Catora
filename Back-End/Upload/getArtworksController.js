@@ -3,6 +3,7 @@ const path = require('path');
 const router = express.Router();
 const db = require('../connection');
 const { resolve } = require('url');
+require("dotenv").config();
 
 
 router.get('/artworks', (req, res) => {
@@ -18,9 +19,8 @@ router.get('/artworks', (req, res) => {
 
     const artworksWithResolvedUrls = results.map((artwork) => {
       const resolvedImageUrl = artwork.image_url
-        ? resolve('http://localhost:3000/upload/images/', path.basename(artwork.image_url))
+        ? resolve(`${process.env.DNS}/upload/images/`, path.basename(artwork.image_url))
         : null;
-
       return {
         ...artwork,
         image_url: resolvedImageUrl,

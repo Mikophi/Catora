@@ -3,7 +3,7 @@ const router = express.Router();
 const db = require('../connection');
 const { resolve } = require('url');
 const path = require('path');
-
+require("dotenv").config();
 
 router.get('/profile/:user_id', (req, res) => {
   const { user_id } = req.params;
@@ -25,11 +25,11 @@ router.get('/profile/:user_id', (req, res) => {
     const userProfile = results[0];
 
     userProfile.profile_image_url = userProfile.profile_image_url
-      ? resolve('http://localhost:3000/profile/images/', path.basename(userProfile.profile_image_url))
+      ? resolve(`${process.env.DNS}/profile/images/`, path.basename(userProfile.profile_image_url))
       : null;
 
     userProfile.background_image_url = userProfile.background_image_url
-      ? resolve('http://localhost:3000/profile/images/', path.basename(userProfile.background_image_url))
+      ? resolve(`${process.env.DNS}/profile/images/`, path.basename(userProfile.background_image_url))
       : null;
 
     res.status(200).json(userProfile);
