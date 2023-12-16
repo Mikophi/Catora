@@ -4,7 +4,6 @@ const router = express.Router();
 const db = require('../connection');
 const { resolve } = require('url');
 
-router.use('/images', express.static('images'));
 
 router.get('/artworks', (req, res) => {
   const selectQuery = `
@@ -18,11 +17,14 @@ router.get('/artworks', (req, res) => {
     }
 
     const artworksWithResolvedUrls = results.map((artwork) => {
+      const resolvedImageUrl = artwork.image_url
+        ? resolve('http://localhost:3000/upload/images/', path.basename(artwork.image_url))
+        : null;
+
       return {
         ...artwork,
-        image_url: artwork.image_url
-          ? resolve('http://localhost:3000/images', artwork.image_url)
-          : null,
+        image_url: resolvedImageUrl,
+        id: artwork.id || null, // Pastikan id tidak undefined
       };
     });
 
