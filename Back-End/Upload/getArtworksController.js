@@ -4,7 +4,7 @@ const router = express.Router();
 const db = require('../connection');
 const { resolve } = require('url');
 
-router.use('/images', express.static(path.join(__dirname, '../Back-End/Upload/Art-Here')));
+router.use('/images', express.static('images'));
 
 router.get('/artworks', (req, res) => {
   const selectQuery = `

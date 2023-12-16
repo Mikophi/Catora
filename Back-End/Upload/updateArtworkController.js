@@ -8,7 +8,7 @@ const { log } = require('console');
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, `${process.cwd()}/Back-End/Upload/Art-Here`);
+    cb(null, `${process.cwd()}/images`);
   },
   filename: function (req, file, cb) {
     cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));

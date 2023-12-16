@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Artworks</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  </head>
+  <body>
+    <div id="artworks"></div>
+
+    <script>
+      $(document).ready(function () {
+        $.get("http://localhost:3000/upload/artworks/", function (data) {
+          data.forEach(function (artwork) {
+            if (artwork.image_url) {
+              $("#artworks").append(
+                '<img src="' + artwork.image_url + '" alt="Artwork" />'
+              );
+            }
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
