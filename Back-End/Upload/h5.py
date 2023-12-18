@@ -1,4 +1,5 @@
 import os
+import datetime
 from flask import Flask, request, jsonify
 from werkzeug.utils import secure_filename
 from tensorflow.keras.models import load_model
@@ -7,9 +8,6 @@ from tensorflow.keras.applications.inception_v3 import preprocess_input
 import numpy as np
 import mysql.connector
 from mysql.connector import Error
-from dotenv import load_dotenv
-
-load_dotenv()
 
 model = load_model('Model.h5')
 def prepare_image(img_path):
@@ -23,10 +21,10 @@ def create_connection():
     connection = None
     try:
         connection = mysql.connector.connect(
-            host=os.getenv("HOST"),
-            user=os.getenv("USER"),
-            password=os.getenv("PASSWORD"),
-            database=os.getenv("DATABASE")
+            host="localhost",
+            user="root",
+            password="",
+            database="catora"
         )
         print("Connected to MySQL database!")
     except Error as e:
@@ -36,7 +34,7 @@ def create_connection():
 
 app = Flask(__name__)
 
-upload_dir = os.path.join(os.getcwd(), '../../images')
+upload_dir = os.path.join(os.getcwd(), 'Art-Here')
 os.makedirs(upload_dir, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = upload_dir
 
@@ -54,11 +52,6 @@ def upload_file():
 
     prediction = model.predict(image)
 
-    if prediction < 0.00001:
-        return jsonify(error='Artwork created by AI is not accepted', confidence=float(prediction)), 400
-    else:
-        return jsonify(message='Artwork created by Human', confidence=float(prediction)), 201
-
     user_id = request.form['user_id']
     title = request.form['title']
     description = request.form['description']
@@ -67,16 +60,26 @@ def upload_file():
     conn = create_connection()
     cursor = conn.cursor()
 
-    try:
-        cursor.execute("""
-            INSERT INTO artworks (user_id, title, description, tags, image_url)
-            VALUES (%s, %s, %s, %s, %s)
-        """, (user_id, title, description, tags, image_url))
-        conn.commit()
-        return jsonify(message='Artwork Uploaded successfully'), 201
-    except Exception as e:
-        print(f'Error creating artwork: {str(e)}')
-        return jsonify(error='Internal Server Error'), 500
+    if prediction < 0.00001:
+        os.remove(image_url) 
+        return jsonify(error='Artwork created by AI is not accepted', confidence=float(prediction)), 400
+    else:
 
+        timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+        new_filename = f"image-{timestamp}.jpg"
+        new_image_url = os.path.join(app.config['UPLOAD_FOLDER'], new_filename)
+        os.rename(image_url, new_image_url)
+
+        try:
+            cursor.execute("""
+                INSERT INTO artworks (user_id, title, description, tags, image_url)
+                VALUES (%s, %s, %s, %s, %s)
+            """, (user_id, title, description, tags, new_image_url))
+            conn.commit()
+            return jsonify(message='Artwork created by Human and uploaded successfully', confidence=float(prediction)), 201
+        except Exception as e:
+            print(f'Error creating artwork: {str(e)}')
+            return jsonify(error='Internal Server Error'), 500
+        
 if __name__ == '__main__':
     app.run(debug=True)
