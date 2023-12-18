@@ -2,7 +2,9 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
 const db = require('../connection');
-const SECRET = 'kovalskiakaela';
+require("dotenv").config();
+const SECRET = `${process.env.SECRET_KEY}`;
+
 
 router.post('/login', (req, res) => {
   const { username, password } = req.body;
