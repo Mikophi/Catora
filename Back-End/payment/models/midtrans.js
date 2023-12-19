@@ -1,6 +1,6 @@
 var connection = require('../../db');
 const Sequelize = require('sequelize');
-const CatoraUser = require('./catoraUser'); // Pastikan Anda memiliki model untuk tabel catora_users
+const CatoraUser = require('./catoraUser');
 
 const Order = connection.define('order', {
   order_id: {
@@ -12,16 +12,16 @@ const Order = connection.define('order', {
     type: Sequelize.INTEGER,
     allowNull: false,
     references: {
-      model: CatoraUser, // Model untuk tabel catora_users
-      key: 'user_id' // Kolom yang diacu di tabel catora_users
+      model: CatoraUser,
+      key: 'user_id'
     }
   },
   buyer_id: {
     type: Sequelize.INTEGER,
     allowNull: false,
     references: {
-      model: CatoraUser, // Model untuk tabel catora_users
-      key: 'user_id' // Kolom yang diacu di tabel catora_users
+      model: CatoraUser,
+      key: 'user_id'
     }
   },
   title: {

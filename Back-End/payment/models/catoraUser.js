@@ -22,7 +22,7 @@ const CatoraUser = connection.define('catora_user', {
     allowNull: true,
   },
 }, {
-  timestamps: false, // Sesuaikan dengan kebutuhan, jika tidak ada kolom createdAt dan updatedAt
+  timestamps: false,
 });
 
 module.exports = CatoraUser;
