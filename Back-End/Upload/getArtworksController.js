@@ -24,7 +24,7 @@ router.get('/artworks', (req, res) => {
       return {
         ...artwork,
         image_url: resolvedImageUrl,
-        id: artwork.id || null, // Pastikan id tidak undefined
+        id: artwork.id || null,
       };
     });
 

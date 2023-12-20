@@ -21,25 +21,19 @@ router.put('/artworks/:artwork_id', upload.single('image'), (req, res) => {
   const { title, description, tags } = req.body;
   const image_url = req.file.path;
 
-  // Get the artwork from the database
   db.query('SELECT * FROM artworks WHERE artwork_id = ?', [artwork_id], (error, results) => {
     if (error) {
       console.error('Error fetching artwork:', error);
       return res.status(500).json({ error: 'Internal Server Error' });
     }
-
     const artwork = results[0];
 
-
-
-    // Delete the old image file from the server
     fs.unlink(artwork.image_url, (error) => {
       if (error) {
         console.error('Error deleting image file:', error);
         return res.status(500).json({ error: 'Internal Server Error' });
       }
 
-      // Update the artwork in the database
       const updateQuery = `
         UPDATE artworks
         SET title = ?, description = ?, tags = ?, image_url = ?
